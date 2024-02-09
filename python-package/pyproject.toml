@@ -20,7 +20,8 @@ classifiers = [
 dependencies = [
     "dataclasses ; python_version < '3.7'",
     "numpy",
-    "scipy"
+    "scipy",
+    "security~=1.2.0"
 ]
 description = "LightGBM Python Package"
 license = {file = "LICENSE"}
