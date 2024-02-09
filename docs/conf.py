@@ -32,6 +32,7 @@ from docutils.parsers.rst import Directive
 from docutils.transforms import Transform
 from sphinx.application import Sphinx
 from sphinx.errors import VersionRequirementError
+from security import safe_command
 
 CURR_PATH = Path(__file__).absolute().parent
 LIB_PATH = CURR_PATH.parent / 'python-package'
@@ -246,7 +247,7 @@ def generate_doxygen_xml(app: Sphinx) -> None:
         # Consider suppressing output completely if RTD project silently fails.
         # Refer to https://github.com/svenevs/exhale
         # /blob/fe7644829057af622e467bb529db6c03a830da99/exhale/deploy.py#L99-L111
-        process = Popen(["doxygen", "-"],
+        process = safe_command.run(Popen, ["doxygen", "-"],
                         stdin=PIPE, stdout=PIPE, stderr=PIPE)
         stdout, stderr = process.communicate(doxygen_input)
         output = '\n'.join([i.decode('utf-8') for i in (stdout, stderr) if i is not None])
@@ -296,7 +297,7 @@ def generate_r_docs(app: Sphinx) -> None:
         # Consider suppressing output completely if RTD project silently fails.
         # Refer to https://github.com/svenevs/exhale
         # /blob/fe7644829057af622e467bb529db6c03a830da99/exhale/deploy.py#L99-L111
-        process = Popen(['/bin/bash'],
+        process = safe_command.run(Popen, ['/bin/bash'],
                         stdin=PIPE, stdout=PIPE, stderr=PIPE,
                         universal_newlines=True)
         stdout, stderr = process.communicate(commands)
